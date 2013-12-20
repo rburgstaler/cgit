@@ -56,8 +56,17 @@ static void inc_week(struct tm *tm)
 static char *pretty_week(struct tm *tm)
 {
 	static char buf[10];
+	//%V and %G are not supported in Windows.  We need to conver to a format that is supported
+	//http://msdn.microsoft.com/en-us/library/fe06s4ak%28v=vs.100%29.aspx
+	//http://www.cplusplus.com/reference/ctime/strftime/
+	//%V	ISO 8601 week number (00-53)	34
+	//%G	Week-based year	2001
+	//%W	Week number with the first Monday as the first day of week one (00-53)	34
+	//strftime(buf, sizeof(buf), "W%V %G", tm);
 
-	strftime(buf, sizeof(buf), "W%V %G", tm);
+	//%W	Week of year as decimal number, with Monday as first day of week (00 - 53)
+	//%Y	Year with century, as decimal number
+	strftime(buf, sizeof(buf), "W%W %Y", tm);
 	return buf;
 }
 
