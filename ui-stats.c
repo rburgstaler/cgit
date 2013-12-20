@@ -19,6 +19,21 @@ struct authorstat {
 #define DAY_SECS (60 * 60 * 24)
 #define WEEK_SECS (DAY_SECS * 7)
 
+
+static time_t timegm (struct tm *tm)
+{
+  char *tz = getenv ("TZ");
+  setenv ("TZ", "", 1);
+  tzset ();
+  time_t ret = mktime (tm);
+  if (tz)
+    setenv ("TZ", tz, 1);
+  else
+    unsetenv ("TZ");
+  tzset ();
+  return ret;
+}
+
 static void trunc_week(struct tm *tm)
 {
 	time_t t = timegm(tm);
