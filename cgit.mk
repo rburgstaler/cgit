@@ -1,6 +1,10 @@
 # This Makefile is run in the "git" directory in order to re-use Git's
 # build variables and operating system detection.  Hence all files in
 # CGit's directory must be prefixed with "../".
+
+#Msysgit environment requires gettext turned off
+NO_GETTEXT = YesPlease
+
 include Makefile
 
 CGIT_PREFIX = ../
