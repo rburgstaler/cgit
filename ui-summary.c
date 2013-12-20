@@ -95,6 +95,12 @@ void cgit_print_summary()
 	html("</table>");
 }
 
+
+static char* realpath(const char *filepath, const char *filepath2)
+{
+	return filepath;
+}
+
 /* The caller must free the return value. */
 static char* append_readme_path(const char *filename, const char *ref, const char *path)
 {
