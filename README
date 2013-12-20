@@ -1,5 +1,8 @@
-cgit - CGI for Git
+cgit - CGI for Git (for Windows)
 ==================
+
+This is an attempt to take the original brilliantly written cgit and port it 
+over to Windows.
 
 This is an attempt to create a fast web interface for the Git SCM, using a
 built-in cache to decrease server I/O pressure.
@@ -8,6 +11,7 @@ Installation
 ------------
 
 Building cgit involves building a proper version of Git. How to do this
+
 depends on how you obtained the cgit sources:
 
 a) If you're working in a cloned cgit repository, you first need to
