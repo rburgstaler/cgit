@@ -1,6 +1,8 @@
 
-                       cgit - cgi for git
+                       cgit - cgi for git (for Windows)
 
+This is an attempt to take the original brilliantly written cgit and port it 
+over to Windows.
 
 This is an attempt to create a fast web interface for the git scm, using a
 builtin cache to decrease server io-pressure.
