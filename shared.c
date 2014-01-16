@@ -462,6 +462,8 @@ int cgit_open_filter(struct cgit_filter *filter)
 	filter->old_stdout = chk_positive(dup(STDOUT_FILENO),
 		"Unable to duplicate STDOUT");
 	chk_zero(pipe(filter->pipe_fh), "Unable to create pipe to subprocess");
+#ifndef USING_MSYSGIT
+{
 	filter->pid = chk_non_negative(fork(), "Unable to create subprocess");
 	if (filter->pid == 0) {
 		close(filter->pipe_fh[1]);
@@ -470,6 +472,24 @@ int cgit_open_filter(struct cgit_filter *filter)
 		execvp(filter->cmd, filter->argv);
 		die_errno("Unable to exec subprocess %s", filter->cmd);
 	}
+#else
+{
+	int fhin = 0, fhout = 1, fherr = 2;
+
+	fhin = dup(filter->pipe_fh[0]);
+	fhout = dup(filter->old_stdout);
+	fherr = open("/dev/null", O_RDWR);
+
+	filter->pid = mingw_spawnvpe(filter->cmd, (const char **) filter->argv, NULL, NULL, fhin, fhout, fherr);
+
+	chk_non_negative(filter->pid, "Unable to spawn subprocess");
+
+	if (fhin != 0) close(fhin);
+	if (fhout != 1) close(fhout);
+	if (fherr != 2) close(fherr);
+}
+#endif
+
 	close(filter->pipe_fh[0]);
 	chk_non_negative(dup2(filter->pipe_fh[1], STDOUT_FILENO),
 		"Unable to use pipe as STDOUT");
