@@ -22,7 +22,7 @@ static void print_text_buffer(const char *name, char *buf, unsigned long size)
 {
 	unsigned long lineno, idx;
 	const char *numberfmt =
-		"<a class='no' id='n%1$d' name='n%1$d' href='#n%1$d'>%1$d</a>\n";
+		"<a class='no' id='n%d' name='n%d' href='#n%d'>%d</a>\n";
 
 	html("<table summary='blob content' class='blob'>\n");
 
@@ -32,10 +32,13 @@ static void print_text_buffer(const char *name, char *buf, unsigned long size)
 		lineno = 0;
 
 		if (size) {
-			htmlf(numberfmt, ++lineno);
+			++lineno;
+			htmlf(numberfmt, lineno, lineno, lineno, lineno);
 			while (idx < size - 1) { // skip absolute last newline
-				if (buf[idx] == '\n')
-					htmlf(numberfmt, ++lineno);
+				if (buf[idx] == '\n') {
+					lineno++;
+					htmlf(numberfmt, lineno, lineno, lineno, lineno);
+				}
 				idx++;
 			}
 		}
