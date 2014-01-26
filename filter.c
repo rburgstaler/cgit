@@ -49,17 +49,17 @@ void cgit_cleanup_filters(void)
 
 void cgit_init_filters(void)
 {
-	libc_write = dlsym(RTLD_NEXT, "write");
-	if (!libc_write)
-		die("Could not locate libc's write function");
+	//libc_write = dlsym(RTLD_NEXT, "write");
+	//if (!libc_write)
+	//	die("Could not locate libc's write function");
 }
 
-ssize_t write(int fd, const void *buf, size_t count)
-{
-	if (fd != STDOUT_FILENO || !filter_write)
-		return libc_write(fd, buf, count);
-	return filter_write(current_write_filter, buf, count);
-}
+//ssize_t write(int fd, const void *buf, size_t count)
+//{
+//	if (fd != STDOUT_FILENO || !filter_write)
+//		return libc_write(fd, buf, count);
+//	return filter_write(current_write_filter, buf, count);
+//}
 
 static inline void hook_write(struct cgit_filter *filter, ssize_t (*new_write)(struct cgit_filter *base, const void *buf, size_t count))
 {
