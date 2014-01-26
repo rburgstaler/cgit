@@ -65,7 +65,9 @@ endif
 
 # Add -ldl to linker flags on non-BSD systems.
 ifeq ($(findstring BSD,$(uname_S)),)
+ifndef CWINDOWS
 	CGIT_LIBS += -ldl
+endif
 endif
 
 # glibc 2.1+ offers sendfile which the most common C library on Linux
