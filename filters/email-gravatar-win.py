@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/c/python27/python
 
 # Please prefer the email-gravatar.lua using lua: as a prefix over this script. This
 # script is very slow, in comparison.
@@ -30,8 +30,8 @@ if email[-1] == '>':
 
 page = sys.argv[2]
 
-sys.stdin = codecs.getreader("utf-8")(sys.stdin.detach())
-sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+sys.stdin = codecs.getreader("utf-8")(sys.stdin)
+sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
 
 md5 = hashlib.md5(email.encode()).hexdigest()
 text = sys.stdin.read().strip()
