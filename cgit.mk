@@ -31,8 +31,8 @@ ifdef NO_LUA
 else
 LUAJIT_CFLAGS := $(shell pkg-config --cflags luajit 2>/dev/null)
 LUAJIT_LIBS := $(shell pkg-config --libs luajit 2>/dev/null)
-LUA_LIBS := $(shell pkg-config --libs lua 2>/dev/null)
-LUA_CFLAGS := $(shell pkg-config --cflags lua 2>/dev/null)
+LUA_LIBS += $(shell pkg-config --libs lua 2>/dev/null)
+LUA_CFLAGS += $(shell pkg-config --cflags lua 2>/dev/null)
 ifeq (JIT,$(LUA_IMPLEMENTATION))
 	ifeq ($(strip $(LUAJIT_LIBS)),)
  		$(error LuaJIT specified via LUA_IMPLEMENTATION=JIT, but library could not be found.)
