@@ -1,3 +1,6 @@
 [submodule "git"]
 	url = https://github.com/git-for-windows/git
 	path = git
+[submodule "lua"]
+	path = lua
+	url = https://github.com/lua/lua.git
