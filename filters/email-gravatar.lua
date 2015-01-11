@@ -12,7 +12,7 @@ local crypto = require("crypto")
 function filter_open(email, page)
 	buffer = ""
 	md5 = crypto.digest("md5", email:sub(2, -2):lower())
-	html("<img src='//www.gravatar.com/avatar/" .. md5 .. "?s=13&amp;d=retro' width='13' height='13' alt='Gravatar' /> " .. buffer)
+    html("<span class='libravatar'><img class='inline' src='//www.gravatar.com/avatar/" .. md5 .. "?s=13&amp;d=retro' /><img class='onhover' src='//www.gravatar.com/avatar/" .. md5 .. "?s=128&amp;d=retro' /></span>" .. buffer)
 end
 
 function filter_close()
