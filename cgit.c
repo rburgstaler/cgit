@@ -937,8 +937,8 @@ static void process_cached_repolist(const char *path)
 	 * rescan the specified path and generate a new cached repolist
 	 * in a child-process to avoid latency for the current request.
 	 */
-	if (fork())
-		goto out;
+	//if (fork())
+	//	goto out;
 
 	exit(generate_cached_repolist(path, cached_rc.buf));
 out:
