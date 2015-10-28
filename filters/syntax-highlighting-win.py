@@ -6,11 +6,12 @@
 #located in c:\python27\python but not use it or find it.
 #Currently the logic that makes this occur is in compat/mingw.c @ parse_interpreter()
 
-# This script uses Pygments and Python2. You must have both installed
+# This script uses Pygments, markdown, and Python2. You must have ALL installed
 # for this to work.
 #
 # http://pygments.org/
 # http://python.org/
+# http://pythonhosted.org/Markdown
 #
 # It may be used with the source-filter or repo.source-filter settings
 # in cgitrc.
@@ -33,6 +34,7 @@ from pygments.lexers import TextLexer
 from pygments.lexers import guess_lexer
 from pygments.lexers import guess_lexer_for_filename
 from pygments.formatters import HtmlFormatter
+import markdown
 
 
 # read stdin and decode to utf-8. ignore any unkown signs.
@@ -51,9 +53,13 @@ except ClassNotFound:
 except TypeError:
 	lexer = TextLexer(encoding='utf-8')
 
-# highlight! :-)
-# printout pygments' css definitions as well
-sys.stdout.write('<style>')
-sys.stdout.write(formatter.get_style_defs('.highlight'))
-sys.stdout.write('</style>')
-highlight(data, lexer, formatter, outfile=sys.stdout)
+#Check if this is mark down (hightlight does not yet support markdown)
+if filename[-3:].lower() == '.md':
+	sys.stdout.write(markdown.markdown(data))
+else:
+	# highlight! :-)
+	# printout pygments' css definitions as well
+	sys.stdout.write('<style>')
+	sys.stdout.write(formatter.get_style_defs('.highlight'))
+	sys.stdout.write('</style>')
+	highlight(data, lexer, formatter, outfile=sys.stdout)
