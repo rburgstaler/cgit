@@ -16,43 +16,33 @@
 #include <errno.h>
 
 /* Percent-encoding of each character, except: a-zA-Z0-9!$()*,./:;@- */
-static const char* url_escape_table[256] = {
-	"%00", "%01", "%02", "%03", "%04", "%05", "%06", "%07",
-	"%08", "%09", "%0a", "%0b", "%0c", "%0d", "%0e", "%0f",
-	"%10", "%11", "%12", "%13", "%14", "%15", "%16", "%17",
-	"%18", "%19", "%1a", "%1b", "%1c", "%1d", "%1e", "%1f",
-	"%20", NULL,  "%22", "%23", NULL,  "%25", "%26", "%27",
-	NULL,  NULL,  NULL,  "%2b", NULL,  NULL,  NULL,  NULL,
-	NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,
-	NULL,  NULL,  NULL,  NULL,  "%3c", "%3d", "%3e", "%3f",
-	NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,
-	NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,
-	NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,
-	NULL,  NULL,  NULL,  NULL,  "%5c", NULL,  "%5e", NULL,
-	"%60", NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,
-	NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,
-	NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,  NULL,
-	NULL,  NULL,  NULL,  "%7b", "%7c", "%7d", NULL,  "%7f",
-	"%80", "%81", "%82", "%83", "%84", "%85", "%86", "%87",
-	"%88", "%89", "%8a", "%8b", "%8c", "%8d", "%8e", "%8f",
-	"%90", "%91", "%92", "%93", "%94", "%95", "%96", "%97",
-	"%98", "%99", "%9a", "%9b", "%9c", "%9d", "%9e", "%9f",
-	"%a0", "%a1", "%a2", "%a3", "%a4", "%a5", "%a6", "%a7",
-	"%a8", "%a9", "%aa", "%ab", "%ac", "%ad", "%ae", "%af",
-	"%b0", "%b1", "%b2", "%b3", "%b4", "%b5", "%b6", "%b7",
-	"%b8", "%b9", "%ba", "%bb", "%bc", "%bd", "%be", "%bf",
-	"%c0", "%c1", "%c2", "%c3", "%c4", "%c5", "%c6", "%c7",
-	"%c8", "%c9", "%ca", "%cb", "%cc", "%cd", "%ce", "%cf",
-	"%d0", "%d1", "%d2", "%d3", "%d4", "%d5", "%d6", "%d7",
-	"%d8", "%d9", "%da", "%db", "%dc", "%dd", "%de", "%df",
-	"%e0", "%e1", "%e2", "%e3", "%e4", "%e5", "%e6", "%e7",
-	"%e8", "%e9", "%ea", "%eb", "%ec", "%ed", "%ee", "%ef",
-	"%f0", "%f1", "%f2", "%f3", "%f4", "%f5", "%f6", "%f7",
-	"%f8", "%f9", "%fa", "%fb", "%fc", "%fd", "%fe", "%ff"
-};
+static const char* url_escape_table[256] = { "%00", "%01", "%02", "%03", "%04",
+		"%05", "%06", "%07", "%08", "%09", "%0a", "%0b", "%0c", "%0d", "%0e",
+		"%0f", "%10", "%11", "%12", "%13", "%14", "%15", "%16", "%17", "%18",
+		"%19", "%1a", "%1b", "%1c", "%1d", "%1e", "%1f", "%20", NULL, "%22",
+		"%23", NULL, "%25", "%26", "%27", NULL, NULL, NULL, "%2b", NULL, NULL,
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		NULL, NULL, "%3c", "%3d", "%3e", "%3f", NULL, NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, "%5c",
+		NULL, "%5e", NULL, "%60", NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, "%7b", "%7c", "%7d", NULL,
+		"%7f", "%80", "%81", "%82", "%83", "%84", "%85", "%86", "%87", "%88",
+		"%89", "%8a", "%8b", "%8c", "%8d", "%8e", "%8f", "%90", "%91", "%92",
+		"%93", "%94", "%95", "%96", "%97", "%98", "%99", "%9a", "%9b", "%9c",
+		"%9d", "%9e", "%9f", "%a0", "%a1", "%a2", "%a3", "%a4", "%a5", "%a6",
+		"%a7", "%a8", "%a9", "%aa", "%ab", "%ac", "%ad", "%ae", "%af", "%b0",
+		"%b1", "%b2", "%b3", "%b4", "%b5", "%b6", "%b7", "%b8", "%b9", "%ba",
+		"%bb", "%bc", "%bd", "%be", "%bf", "%c0", "%c1", "%c2", "%c3", "%c4",
+		"%c5", "%c6", "%c7", "%c8", "%c9", "%ca", "%cb", "%cc", "%cd", "%ce",
+		"%cf", "%d0", "%d1", "%d2", "%d3", "%d4", "%d5", "%d6", "%d7", "%d8",
+		"%d9", "%da", "%db", "%dc", "%dd", "%de", "%df", "%e0", "%e1", "%e2",
+		"%e3", "%e4", "%e5", "%e6", "%e7", "%e8", "%e9", "%ea", "%eb", "%ec",
+		"%ed", "%ee", "%ef", "%f0", "%f1", "%f2", "%f3", "%f4", "%f5", "%f6",
+		"%f7", "%f8", "%f9", "%fa", "%fb", "%fc", "%fd", "%fe", "%ff" };
 
-char *fmt(const char *format, ...)
-{
+char *fmt(const char *format, ...) {
 	static char buf[8][1024];
 	static int bufidx;
 	int len;
@@ -70,44 +60,92 @@ char *fmt(const char *format, ...)
 	}
 	return buf[bufidx];
 }
-
-char *fmtalloc(const char *format, ...)
+/*
+int DebugWrite(const char *filepath, const char *txt)
 {
+    int filedesc = open(filepath, O_WRONLY | O_APPEND | O_CREAT, S_IRWXU);
+    if(filedesc < 0)
+        return 1;
+
+    if(write(filedesc, txt, strlen(txt)) != strlen(txt)) { }
+    if(write(filedesc, "\r\n", 2) != 2) { }
+
+    close(filedesc);
+    return 0;
+}
+
+int DebugWrite2(const char *txt)
+{
+	DebugWrite("d:\\debug\\testfile2.txt", txt);
+    return 0;
+}
+
+
+//Example text to pass in "Number of passes: %d"
+int DebugWriteFormat(const char *filepath, const char *fmt, ...)
+{
+	const int initSize = 10;
+    char *str = malloc(initSize);
+
+	va_list params;
+	va_start(params, fmt);
+
+	//Note that the return value does not include the null string terminator
+	int cnt = vsnprintf(str, initSize, fmt, params);
+
+	//if the initial size is not large enough then re-alloc
+	if (cnt >= initSize) {
+		str = realloc(str, cnt + 4);  //Add 4 just in case unicode?
+		vsnprintf(str, cnt + 4, fmt, params);
+	}
+	DebugWrite(filepath, str);
+
+	va_end(params);
+
+	free(str);
+    return 0;
+}
+*/
+
+char *fmtalloc(const char *format, ...) {
 	struct strbuf sb = STRBUF_INIT;
 	va_list args;
 
 	va_start(args, format);
+	DebugWrite2("before a");
+	DebugWrite2(format);
+	DebugWriteFormat("d:\\debug\\testfile2.txt", format, args);
 	strbuf_vaddf(&sb, format, args);
+	DebugWrite2(sb.buf);
+	DebugWrite2("after a");
 	va_end(args);
 
 	return strbuf_detach(&sb, NULL);
 }
 
-void html_raw(const char *data, size_t size)
-{
+void html_raw(const char *data, size_t size) {
 	if (write(STDOUT_FILENO, data, size) != size)
 		die_errno("write error on html output");
 }
 
-void html(const char *txt)
-{
+void html(const char *txt) {
 	html_raw(txt, strlen(txt));
 }
 
-void htmlf(const char *format, ...)
-{
+void htmlf(const char *format, ...) {
 	va_list args;
 	struct strbuf buf = STRBUF_INIT;
 
 	va_start(args, format);
+	DebugWrite2("before b");
 	strbuf_vaddf(&buf, format, args);
+	DebugWrite2("after b");
 	va_end(args);
 	html(buf.buf);
 	strbuf_release(&buf);
 }
 
-void html_txtf(const char *format, ...)
-{
+void html_txtf(const char *format, ...) {
 	va_list args;
 
 	va_start(args, format);
@@ -115,27 +153,26 @@ void html_txtf(const char *format, ...)
 	va_end(args);
 }
 
-void html_vtxtf(const char *format, va_list ap)
-{
+void html_vtxtf(const char *format, va_list ap) {
 	va_list cp;
 	struct strbuf buf = STRBUF_INIT;
 
 	va_copy(cp, ap);
+	DebugWrite2("before c");
 	strbuf_vaddf(&buf, format, cp);
+	DebugWrite2("after c");
 	va_end(cp);
 	html_txt(buf.buf);
 	strbuf_release(&buf);
 }
 
-void html_status(int code, const char *msg, int more_headers)
-{
+void html_status(int code, const char *msg, int more_headers) {
 	htmlf("Status: %d %s\n", code, msg);
 	if (!more_headers)
 		html("\n");
 }
 
-void html_txt(const char *txt)
-{
+void html_txt(const char *txt) {
 	const char *t = txt;
 	while (t && *t) {
 		int c = *t;
@@ -155,8 +192,7 @@ void html_txt(const char *txt)
 		html(txt);
 }
 
-void html_ntxt(int len, const char *txt)
-{
+void html_ntxt(int len, const char *txt) {
 	const char *t = txt;
 	while (t && *t && len--) {
 		int c = *t;
@@ -178,21 +214,21 @@ void html_ntxt(int len, const char *txt)
 		html("...");
 }
 
-void html_attrf(const char *fmt, ...)
-{
+void html_attrf(const char *fmt, ...) {
 	va_list ap;
 	struct strbuf sb = STRBUF_INIT;
 
 	va_start(ap, fmt);
+	DebugWrite2("before d");
 	strbuf_vaddf(&sb, fmt, ap);
+	DebugWrite2("after d");
 	va_end(ap);
 
 	html_attr(sb.buf);
 	strbuf_release(&sb);
 }
 
-void html_attr(const char *txt)
-{
+void html_attr(const char *txt) {
 	const char *t = txt;
 	while (t && *t) {
 		int c = *t;
@@ -216,8 +252,7 @@ void html_attr(const char *txt)
 		html(txt);
 }
 
-void html_url_path(const char *txt)
-{
+void html_url_path(const char *txt) {
 	const char *t = txt;
 	while (t && *t) {
 		unsigned char c = *t;
@@ -233,8 +268,7 @@ void html_url_path(const char *txt)
 		html(txt);
 }
 
-void html_url_arg(const char *txt)
-{
+void html_url_arg(const char *txt) {
 	const char *t = txt;
 	while (t && *t) {
 		unsigned char c = *t;
@@ -252,8 +286,7 @@ void html_url_arg(const char *txt)
 		html(txt);
 }
 
-void html_hidden(const char *name, const char *value)
-{
+void html_hidden(const char *name, const char *value) {
 	html("<input type='hidden' name='");
 	html_attr(name);
 	html("' value='");
@@ -261,8 +294,8 @@ void html_hidden(const char *name, const char *value)
 	html("'/>");
 }
 
-void html_option(const char *value, const char *text, const char *selected_value)
-{
+void html_option(const char *value, const char *text,
+		const char *selected_value) {
 	html("<option value='");
 	html_attr(value);
 	html("'");
@@ -273,16 +306,14 @@ void html_option(const char *value, const char *text, const char *selected_value
 	html("</option>\n");
 }
 
-void html_intoption(int value, const char *text, int selected_value)
-{
+void html_intoption(int value, const char *text, int selected_value) {
 	htmlf("<option value='%d'%s>", value,
-	      value == selected_value ? " selected='selected'" : "");
+			value == selected_value ? " selected='selected'" : "");
 	html_txt(text);
 	html("</option>");
 }
 
-void html_link_open(const char *url, const char *title, const char *class)
-{
+void html_link_open(const char *url, const char *title, const char *class) {
 	html("<a href='");
 	html_attr(url);
 	if (title) {
@@ -296,26 +327,23 @@ void html_link_open(const char *url, const char *title, const char *class)
 	html("'>");
 }
 
-void html_link_close(void)
-{
+void html_link_close(void) {
 	html("</a>");
 }
 
-void html_fileperm(unsigned short mode)
-{
-	htmlf("%c%c%c", (mode & 4 ? 'r' : '-'),
-	      (mode & 2 ? 'w' : '-'), (mode & 1 ? 'x' : '-'));
+void html_fileperm(unsigned short mode) {
+	htmlf("%c%c%c", (mode & 4 ? 'r' : '-'), (mode & 2 ? 'w' : '-'),
+			(mode & 1 ? 'x' : '-'));
 }
 
-int html_include(const char *filename)
-{
+int html_include(const char *filename) {
 	FILE *f;
 	char buf[4096];
 	size_t len;
 
 	if (!(f = fopen(filename, "r"))) {
 		fprintf(stderr, "[cgit] Failed to include file %s: %s (%d).\n",
-			filename, strerror(errno), errno);
+				filename, strerror(errno), errno);
 		return -1;
 	}
 	while ((len = fread(buf, 1, 4096, f)) > 0)
@@ -324,8 +352,7 @@ int html_include(const char *filename)
 	return 0;
 }
 
-static int hextoint(char c)
-{
+static int hextoint(char c) {
 	if (c >= 'a' && c <= 'f')
 		return 10 + c - 'a';
 	else if (c >= 'A' && c <= 'F')
@@ -336,19 +363,18 @@ static int hextoint(char c)
 		return -1;
 }
 
-static char *convert_query_hexchar(char *txt)
-{
+static char *convert_query_hexchar(char *txt) {
 	int d1, d2, n;
 	n = strlen(txt);
 	if (n < 3) {
 		*txt = '\0';
-		return txt-1;
+		return txt - 1;
 	}
 	d1 = hextoint(*(txt + 1));
 	d2 = hextoint(*(txt + 2));
 	if (d1 < 0 || d2 < 0) {
 		memmove(txt, txt + 3, n - 2);
-		return txt-1;
+		return txt - 1;
 	} else {
 		*txt = d1 * 16 + d2;
 		memmove(txt + 1, txt + 3, n - 2);
@@ -356,15 +382,15 @@ static char *convert_query_hexchar(char *txt)
 	}
 }
 
-int http_parse_querystring(const char *txt_, void (*fn)(const char *name, const char *value))
-{
+int http_parse_querystring(const char *txt_,
+		void (*fn)(const char *name, const char *value)) {
 	char *o, *t, *txt, *value = NULL, c;
 
 	if (!txt_)
 		return 0;
 
 	o = t = txt = xstrdup(txt_);
-	while ((c=*t) != '\0') {
+	while ((c = *t) != '\0') {
 		if (c == '=') {
 			*t = '\0';
 			value = t + 1;

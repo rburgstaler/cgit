@@ -547,6 +547,51 @@ static void print_no_repo_clone_urls(const char *url)
         html("</a></td></tr>\n");
 }
 
+int DebugWrite(const char *filepath, const char *txt)
+{
+    int filedesc = open(filepath, O_WRONLY | O_APPEND | O_CREAT, S_IRWXU);
+    if(filedesc < 0)
+        return 1;
+
+    if(write(filedesc, txt, strlen(txt)) != strlen(txt)) { }
+    if(write(filedesc, "\r\n", 2) != 2) { }
+
+    close(filedesc);
+    return 0;
+}
+
+int DebugWrite2(const char *txt)
+{
+	DebugWrite("d:\\debug\\testfile2.txt", txt);
+    return 0;
+}
+
+
+//Example text to pass in "Number of passes: %d"
+int DebugWriteFormat(const char *filepath, const char *fmt, ...)
+{
+	const int initSize = 10;
+    char *str = malloc(initSize);
+
+	va_list params;
+	va_start(params, fmt);
+
+	//Note that the return value does not include the null string terminator
+	int cnt = vsnprintf(str, initSize, fmt, params);
+
+	//if the initial size is not large enough then re-alloc
+	if (cnt >= initSize) {
+		str = realloc(str, cnt + 4);  //Add 4 just in case unicode?
+		vsnprintf(str, cnt + 4, fmt, params);
+	}
+	DebugWrite(filepath, str);
+
+	va_end(params);
+
+	free(str);
+    return 0;
+}
+
 static int prepare_repo_cmd(void)
 {
 	unsigned char sha1[20];
@@ -582,7 +627,11 @@ static int prepare_repo_cmd(void)
 		cgit_print_docend();
 		return 1;
 	}
+	DebugWrite2("Before ctx.page.title");
+	DebugWrite2(ctx.repo->name);
+	DebugWrite2(ctx.repo->desc);
 	ctx.page.title = fmtalloc("%s - %s", ctx.repo->name, ctx.repo->desc);
+	DebugWrite2("After ctx.page.title");
 
 	if (!ctx.repo->defbranch)
 		ctx.repo->defbranch = guess_defbranch();
